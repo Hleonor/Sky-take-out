@@ -69,6 +69,8 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport
      */
     protected void addResourceHandlers(ResourceHandlerRegistry registry)
     {
+        // 如果不设置静态资源映射，则spring会误认为想要请求一个动态界面，此时会警告：No mapping for GET /doc.html
+        // 因为网页请求过来的时候就会直接由controller处理，而不会去找静态资源
         log.info("开始设置静态资源映射...");
         registry.addResourceHandler("/doc.html").addResourceLocations("classpath:/META-INF/resources/");
         registry.addResourceHandler("/webjars/**").addResourceLocations("classpath:/META-INF/resources/webjars/");
