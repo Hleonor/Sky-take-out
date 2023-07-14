@@ -3,6 +3,7 @@ package com.sky.service.impl;
 import com.sky.constant.MessageConstant;
 import com.sky.constant.PasswordConstant;
 import com.sky.constant.StatusConstant;
+import com.sky.context.BaseContext;
 import com.sky.dto.EmployeeDTO;
 import com.sky.dto.EmployeeLoginDTO;
 import com.sky.entity.Employee;
@@ -67,6 +68,8 @@ public class EmployeeServiceImpl implements EmployeeService {
      */
     public void save(EmployeeDTO employeeDTO)
     {
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
+
         // 调用持久层
         Employee employee = new Employee();
         // 对象的属性拷贝，因为EmployeeDTO和Employee的属性名一样，所以不用自己一个一个的set
@@ -85,9 +88,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         employee.setUpdateTime(LocalDateTime.now());
 
         // 设置创建人和修改人的ID
-        // todo:后期需要改为当前登录用户的ID
-        employee.setCreateUser(10L);
-        employee.setUpdateUser(10L);
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
 
         // 调用持久层
         employeeMapper.insert(employee);

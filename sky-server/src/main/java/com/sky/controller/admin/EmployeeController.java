@@ -92,6 +92,8 @@ public class EmployeeController {
     {
         log.info("新增员工：{}", employeeDTO); // {}占位符，后面的参数会替换占位符
 
+        System.out.println("当前线程的id：" + Thread.currentThread().getId());
+
         employeeService.save(employeeDTO);
         return Result.success();
     }
