@@ -11,4 +11,35 @@
         </where>
         order by create_time desc
     </select>
+    <!--这里可以写别名，原因在于在application.xml文件中已经扫描过包了，所以自动创建了每个类对应的别名，所以不用完整地写出类名-->
+    <update id="update" parameterType="Employee">
+        update employee
+        <set>
+            <if test = "name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test = "username != null and username != ''">
+                username = #{username},
+            </if>
+            <if test = "password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test = "sex != null">
+                sex = #{sex},
+            </if>
+            <if test = "idNumber != null">
+                idNumber = #{idNumber},
+            </if>
+            <if test = "updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+            <if test = "updateUser != null">
+                updateUser = #{updateUser},
+            </if>
+            <if test = "status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
 </mapper>

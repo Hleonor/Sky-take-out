@@ -36,4 +36,10 @@ public interface EmployeeMapper {
      */
     // 因为要使用动态SQL，所以就不用注解的方式进行编写了，应该写到映射文件中
     Page<Employee> pageQuery(EmployeePageQueryDTO employeePageQueryDTO);
+
+    /**
+     * 根据主键动态修改属性
+     * @param employee
+     */
+    void update(Employee employee);
 }

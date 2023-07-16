@@ -115,4 +115,17 @@ public class EmployeeController {
         PageResult pageResult = employeeService.pageQuery(employeePageQueryDTO);
         return Result.success(pageResult);
     }
+
+    /**
+     * 是否加泛型的原则，如果是查询信息，那么就需要传入类型来指定data中包含的信息类型
+     * 如果是非查询类的信息，那么就没有必要在返回信息中加上泛型
+     */
+    @PostMapping("/status/{status}") // 如果参数名和路径参数名一样的话，参数的地方就不用补充注解@PathVariable("status")了
+    @ApiOperation("启用禁用员工账号")
+    public Result startOrStop(@PathVariable Integer status, Long id) // status是一个路径参数，所以需要使用注解，路径参数的意思是在路径中传递的参数
+    {
+        log.info("启用禁用员工账号：status={}, id={}", status, id);
+        employeeService.startOrStop(status, id);
+        return Result.success();
+    }
 }
