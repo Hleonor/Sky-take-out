@@ -26,7 +26,8 @@ import java.time.LocalTime;
 import java.util.List;
 
 @Service
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl implements EmployeeService
+{
 
     @Autowired
     private EmployeeMapper employeeMapper;
@@ -37,7 +38,8 @@ public class EmployeeServiceImpl implements EmployeeService {
      * @param employeeLoginDTO
      * @return
      */
-    public Employee login(EmployeeLoginDTO employeeLoginDTO) {
+    public Employee login(EmployeeLoginDTO employeeLoginDTO)
+    {
         String username = employeeLoginDTO.getUsername();
         String password = employeeLoginDTO.getPassword();
 
@@ -45,7 +47,8 @@ public class EmployeeServiceImpl implements EmployeeService {
         Employee employee = employeeMapper.getByUsername(username);
 
         //2、处理各种异常情况（用户名不存在、密码不对、账号被锁定）
-        if (employee == null) {
+        if (employee == null)
+        {
             //账号不存在
             throw new AccountNotFoundException(MessageConstant.ACCOUNT_NOT_FOUND);
         }
@@ -53,12 +56,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         //密码比对
         // 对前端传过来的密码进行加密，然后和数据库中的密码进行比对
         password = DigestUtils.md5DigestAsHex(password.getBytes());
-        if (!password.equals(employee.getPassword())) {
+        if (!password.equals(employee.getPassword()))
+        {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
         }
 
-        if (employee.getStatus() == StatusConstant.DISABLE) {
+        if (employee.getStatus() == StatusConstant.DISABLE)
+        {
             //账号被锁定
             throw new AccountLockedException(MessageConstant.ACCOUNT_LOCKED);
         }
@@ -69,6 +74,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 新增员工
+     *
      * @param employeeDTO
      */
     public void save(EmployeeDTO employeeDTO)
@@ -102,6 +108,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 分页查询
+     *
      * @param employeePageQueryDTO
      * @return
      */
@@ -113,7 +120,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         PageHelper.startPage(employeePageQueryDTO.getPage(), employeePageQueryDTO.getPageSize());
 
         // 调用持久层
-        Page<Employee> page =  employeeMapper.pageQuery(employeePageQueryDTO);
+        Page<Employee> page = employeeMapper.pageQuery(employeePageQueryDTO);
 
         long total = page.getTotal();
         List<Employee> records = page.getResult();
@@ -122,6 +129,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     /**
      * 启用或禁用员工账号
+     *
      * @param status
      * @param id
      */
@@ -139,4 +147,35 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         employeeMapper.update(employee);
     }
+
+    /**
+     * 根据ID查询员工信息
+     *
+     * @param id
+     * @return
+     */
+    public Employee getById(Long id)
+    {
+        Employee employee = employeeMapper.getById(id);
+        employee.setPassword("****");
+        return employee;
+    }
+
+    /**
+     * @param employeeDTO
+     */
+    public void update(EmployeeDTO employeeDTO)
+    {
+        Employee employee = new Employee();
+        BeanUtils.copyProperties(employeeDTO, employee);
+
+        // 设置修改时间
+        employee.setUpdateTime(LocalDateTime.now());
+        // 设置修改人
+        employee.setUpdateUser(BaseContext.getCurrentId());
+
+        employeeMapper.update(employee);
+    }
+
+
 }
