@@ -1,8 +1,10 @@
 package com.sky.mapper;
 
 import com.github.pagehelper.Page;
+import com.sky.annotation.AutoFill;
 import com.sky.dto.EmployeePageQueryDTO;
 import com.sky.entity.Employee;
+import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
@@ -21,12 +23,14 @@ public interface EmployeeMapper {
     /**
      * 插入员工数据
      * 由于是插入单表的新增操作，所以没必要把这个SQL语句写到EmployeeMapper.xml文件中
+     *
      * @param employee
      */
     // 由于application.yml中已经开启了驼峰命名法，所以这里的#{createTime}会自动映射到数据库中的create_time字段
     @Insert("insert into employee (name, username, password, phone, sex, id_number, create_time, update_time, create_user, update_user, status) " +
             "values" +
             "(#{name}, #{username}, #{password}, #{phone},#{sex}, #{idNumber}, #{createTime}, #{updateTime}, #{createUser}, #{updateUser}, #{status})")
+    @AutoFill(value = OperationType.INSERT)
     void insert(Employee employee);
 
     /**
@@ -41,6 +45,7 @@ public interface EmployeeMapper {
      * 根据主键动态修改属性
      * @param employee
      */
+    @AutoFill(value = OperationType.UPDATE)
     void update(Employee employee);
 
     /**
