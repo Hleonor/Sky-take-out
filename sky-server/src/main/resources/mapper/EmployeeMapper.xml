@@ -27,7 +27,7 @@
             <if test = "sex != null">
                 sex = #{sex},
             </if>
-            <if test = "idNumber != null">
+            <if test = "idNumber != null"> # 这里的idNumber是传参的名字，而不是数据库中的字段名
                 id_Number = #{idNumber},
             </if>
             <if test = "updateTime != null">
